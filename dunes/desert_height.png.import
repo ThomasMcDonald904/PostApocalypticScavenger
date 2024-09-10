@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dqtfav1cov4wa"
-path.s3tc="res://.godot/imported/desert_height.png-abb104bc9cc60acb1a7cb25321934d15.s3tc.ctex"
+path.s3tc="res://.godot/imported/desert_height.png-d23fb040da61e009f4393c42c4cfea9c.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://desert_height.png"
-dest_files=["res://.godot/imported/desert_height.png-abb104bc9cc60acb1a7cb25321934d15.s3tc.ctex"]
+source_file="res://dunes/desert_height.png"
+dest_files=["res://.godot/imported/desert_height.png-d23fb040da61e009f4393c42c4cfea9c.s3tc.ctex"]
 
 [params]
 

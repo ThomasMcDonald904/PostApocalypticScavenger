@@ -1,6 +1,6 @@
 [gd_resource type="VisualShader" load_steps=14 format=3 uid="uid://drde4i40b6dal"]
 
-[ext_resource type="Texture2D" uid="uid://dqtfav1cov4wa" path="res://desert_height.png" id="1_48kd2"]
+[ext_resource type="Texture2D" uid="uid://dqtfav1cov4wa" path="res://dunes/desert_height.png" id="1_48kd2"]
 
 [sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_wnd1b"]
 parameter_name = "Texture2DParameter"

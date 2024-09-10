@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=4 uid="uid://dtlguoiv5dk0o"]
+[gd_scene load_steps=13 format=4 uid="uid://dtlguoiv5dk0o"]
 
 [ext_resource type="Texture2D" uid="uid://bgpjrj8qm27f2" path="res://rifle/GunWoodUV.exr" id="1_a8uxk"]
+[ext_resource type="Script" path="res://rifle/muzzle_flash.gd" id="2_eu7ar"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_blerj"]
 albedo_texture = ExtResource("1_a8uxk")
@@ -100,8 +101,38 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_jnj1v")
 
-[node name="Rifle" type="Node3D"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3y1s0"]
+particle_flag_rotate_y = true
+angle_min = -192.4
+angle_max = 196.9
+initial_velocity_max = 2.0
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="Gradient" id="Gradient_yb7ay"]
+offsets = PackedFloat32Array(0.33209, 1)
+colors = PackedColorArray(0.81956, 0.84, 0.2268, 0.952941, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vu55m"]
+gradient = SubResource("Gradient_yb7ay")
+fill = 2
+fill_from = Vector2(0.504274, 0.478632)
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_uk0s1"]
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_vu55m")
+emission_enabled = true
+emission_energy_multiplier = 4.95
+emission_texture = SubResource("GradientTexture2D_vu55m")
+
+[sub_resource type="BoxMesh" id="BoxMesh_0gpht"]
+material = SubResource("ORMMaterial3D_uk0s1")
+size = Vector3(0.1, 0.1, 0.001)
+
+[node name="Rifle" type="Node3D" node_paths=PackedStringArray("light", "emitter")]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+script = ExtResource("2_eu7ar")
+light = NodePath("MuzzleFlash/OmniLight3D")
+emitter = NodePath("MuzzleFlash/MuzzleFlash")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 
@@ -109,3 +140,26 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05334, 0, 0.97732)
 mesh = SubResource("ArrayMesh_ty2a7")
 skeleton = NodePath("")
+
+[node name="MuzzleFlash" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04928, 0.714406, 9.83953)
+
+[node name="MuzzleFlash" type="GPUParticles3D" parent="MuzzleFlash"]
+transform = Transform3D(-0.998172, 0, -0.0604389, 0, 1, 0, 0.0604389, 0, -0.998172, 0, 0.0543401, -0.533836)
+emitting = false
+amount = 17
+lifetime = 0.02
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+transform_align = 2
+process_material = SubResource("ParticleProcessMaterial_3y1s0")
+draw_pass_1 = SubResource("BoxMesh_0gpht")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="MuzzleFlash"]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -0.0597395, 0.0622503, 0.652204)
+visible = false
+light_color = Color(0.999999, 0.958953, 0.851215, 1)
+light_energy = 1.5
+distance_fade_enabled = true
+omni_range = 8.0

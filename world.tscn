@@ -1,11 +1,12 @@
-[gd_scene load_steps=21 format=3 uid="uid://br27b8bu3um0c"]
+[gd_scene load_steps=20 format=3 uid="uid://br27b8bu3um0c"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_k5e8m"]
 [ext_resource type="Texture2D" uid="uid://baj6tmfb7d0ch" path="res://rosendal_park_sunset_puresky_2k.hdr" id="2_36prk"]
 [ext_resource type="Shader" uid="uid://drde4i40b6dal" path="res://dunes/dune_shader.tres" id="2_q8d7v"]
+[ext_resource type="Texture2D" uid="uid://dqtfav1cov4wa" path="res://dunes/desert_height.png" id="4_thae6"]
 [ext_resource type="Script" path="res://dunes/dune.gd" id="4_v6xbh"]
-[ext_resource type="Texture2D" uid="uid://dqtfav1cov4wa" path="res://desert_height.png" id="5_8bihs"]
 [ext_resource type="PackedScene" uid="uid://5kxn4fv8t148" path="res://character/character.tscn" id="6_fsorv"]
+[ext_resource type="PackedScene" uid="uid://c1gxcks7ajhu" path="res://debug/green_ball.tscn" id="6_oqggs"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="7_sv6bh"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ihux0"]
@@ -60,12 +61,6 @@ size = Vector2(150, 150)
 subdivide_width = 32
 subdivide_depth = 32
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dv8uv"]
-albedo_color = Color(0.413743, 0.455719, 0.168752, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_ittcv"]
-material = SubResource("StandardMaterial3D_dv8uv")
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_83es4"]
 render_priority = 0
 shader = ExtResource("7_sv6bh")
@@ -92,20 +87,25 @@ script = ExtResource("1_k5e8m")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_u8rv5")
 
-[node name="Dunes" type="MeshInstance3D" parent="."]
+[node name="Dunes" type="StaticBody3D" parent="." groups=["interacts_with_bullet"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.2592, 1.38622, 1.42851)
+script = ExtResource("4_v6xbh")
+hmap = ExtResource("4_thae6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Dunes"]
 mesh = SubResource("PlaneMesh_y0412")
 skeleton = NodePath("")
-script = ExtResource("4_v6xbh")
-hmap = ExtResource("5_8bihs")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Dunes"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Dunes"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Dunes/StaticBody3D"]
+[node name="GreenBall" parent="." instance=ExtResource("6_oqggs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.31561, 14.8488, 31.925)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.883594, -0.389887, -0.259325, 0.468254, 0.735717, 0.489346, 0, -0.553813, 0.832641, 10.3006, 11.5996, 0.0261383)
-mesh = SubResource("SphereMesh_ittcv")
+[node name="GreenBall2" parent="." instance=ExtResource("6_oqggs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.31828, 15.2452, -30.6373)
+
+[node name="GreenBall3" parent="." instance=ExtResource("6_oqggs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.161, 18.3717, -30.6373)
 
 [node name="Character" parent="." instance=ExtResource("6_fsorv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.84128, 0)
@@ -114,4 +114,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.84128, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.2592, 1.38622, 1.42851)
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_3i2dr")
-skeleton = NodePath("../Dunes")
+skeleton = NodePath("../Dunes/MeshInstance3D")

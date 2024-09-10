@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 import/blender/enabled=false
 
+[global_group]
+
+interacts_with_bullet=""
+
 [input]
 
 forward={

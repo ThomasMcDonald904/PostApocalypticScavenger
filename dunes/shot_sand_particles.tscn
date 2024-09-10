@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://bmgjwu5r56p5p"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jvmkd"]
+direction = Vector3(0, 1, 0)
+spread = 15.0
+initial_velocity_min = 6.1
+initial_velocity_max = 13.35
+gravity = Vector3(0, -29.4, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_15f0f"]
+albedo_color = Color(0.47, 0.404827, 0.2256, 1)
+metallic_specular = 0.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_facp0"]
+lightmap_size_hint = Vector2i(17, 9)
+material = SubResource("StandardMaterial3D_15f0f")
+radius = 0.05
+height = 0.1
+radial_segments = 15
+rings = 3
+
+[node name="ShotSandParticles" type="GPUParticles3D"]
+emitting = false
+amount = 30
+lifetime = 1.25
+one_shot = true
+speed_scale = 1.1
+explosiveness = 1.0
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_jvmkd")
+draw_pass_1 = SubResource("SphereMesh_facp0")
