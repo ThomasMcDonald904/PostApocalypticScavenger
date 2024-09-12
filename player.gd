@@ -101,4 +101,4 @@ func shoot():
 	camera.add_shake(gun_fire_shake_amount)
 	var target:Object = $CameraOrigin/Camera3D/RayCast3D.get_collider()
 	if target != null and target.is_in_group("interacts_with_bullet"):
-		target.emit_signal("has_been_shot", $CameraOrigin/Camera3D/RayCast3D.get_collision_point())
+		target.emit_signal("has_been_shot", $CameraOrigin/Camera3D/RayCast3D.get_collision_point(), $CameraOrigin/Camera3D/RayCast3D.get_collision_normal())

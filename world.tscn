@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://br27b8bu3um0c"]
+[gd_scene load_steps=22 format=3 uid="uid://br27b8bu3um0c"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_k5e8m"]
 [ext_resource type="Texture2D" uid="uid://baj6tmfb7d0ch" path="res://rosendal_park_sunset_puresky_2k.hdr" id="2_36prk"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://5kxn4fv8t148" path="res://character/character.tscn" id="6_fsorv"]
 [ext_resource type="PackedScene" uid="uid://c1gxcks7ajhu" path="res://debug/green_ball.tscn" id="6_oqggs"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="7_sv6bh"]
+[ext_resource type="PackedScene" uid="uid://b32mwduyu4gxl" path="res://drones/shite_drone.tscn" id="9_gk7jr"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ihux0"]
 panorama = ExtResource("2_36prk")
@@ -81,6 +82,9 @@ material = SubResource("ShaderMaterial_83es4")
 flip_faces = true
 size = Vector2(2, 2)
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_ojrtp"]
+agent_max_slope = 70.0
+
 [node name="World" type="Node3D"]
 script = ExtResource("1_k5e8m")
 
@@ -115,3 +119,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.2592, 1.38622, 1.42851)
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_3i2dr")
 skeleton = NodePath("../Dunes/MeshInstance3D")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+transform = Transform3D(1.00095, 0, 0, 0, 1.00095, 0, 0, 0, 1.00095, 0, 9.29133, 0)
+navigation_mesh = SubResource("NavigationMesh_ojrtp")
+
+[node name="Drone" parent="NavigationRegion3D" instance=ExtResource("9_gk7jr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.88252, 23.3175, -34.1798)
+
+[node name="Drone2" parent="NavigationRegion3D" instance=ExtResource("9_gk7jr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.59899, 20.6878, 67.0814)
+
+[node name="Drone3" parent="NavigationRegion3D" instance=ExtResource("9_gk7jr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.34885, 10.1083, -9.21581)

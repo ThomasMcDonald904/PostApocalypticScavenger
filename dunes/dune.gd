@@ -1,6 +1,6 @@
 extends StaticBody3D
 
-signal has_been_shot(collision_point)
+signal has_been_shot(collision_point, collision_normal)
 
 @export var hmap:CompressedTexture2D
 @onready var collider: CollisionShape3D = $CollisionShape3D
@@ -29,9 +29,12 @@ func _ready() -> void:
 	
 
 
-func shot_sand(collision_point: Vector3):
+func shot_sand(collision_point: Vector3, collision_normal: Vector3):
 	var sand_particles: GPUParticles3D = sand_spray_particles_PS.instantiate()
 	get_parent().add_child(sand_particles)
 	sand_particles.global_position = collision_point
+	sand_particles.global_position.y += 0.5
+	var shot_vector = sand_particles.global_position - get_viewport().get_camera_3d().global_position
+	sand_particles.process_material.direction = collision_normal.normalized() + shot_vector.normalized()
 	sand_particles.restart() 
 	sand_particles.finished.connect(sand_particles.queue_free)
