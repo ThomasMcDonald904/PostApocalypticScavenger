@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=4 uid="uid://b32mwduyu4gxl"]
+[gd_scene load_steps=10 format=4 uid="uid://b32mwduyu4gxl"]
 
 [ext_resource type="Texture2D" uid="uid://cqfhhn4ickupn" path="res://drones/shite_drone_drone_texture.png" id="1_8e6e4"]
 [ext_resource type="Script" path="res://drones/shite_drone.gd" id="1_wfcxh"]
-[ext_resource type="AudioStream" uid="uid://d14u7g6pqbv3l" path="res://audio/drone_detection_pulse.mp3" id="3_hkfng"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2mc3g"]
 resource_name = "Material.003"
@@ -50,7 +49,6 @@ points = PackedVector3Array(-0.861951, -0.892807, -0.985193, 0.861907, 0.892807,
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_htjn7"]
 transparency = 1
-cull_mode = 2
 albedo_color = Color(0.611765, 1, 1, 0.345098)
 emission = Color(0.611765, 1, 1, 1)
 emission_energy_multiplier = 5.0
@@ -73,15 +71,12 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("ConvexPolygonShape3D_blnsd")
 
-[node name="DetectionPulse" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_roj52")
 
-[node name="Area3D" type="Area3D" parent="DetectionPulse"]
+[node name="Area3D" type="Area3D" parent="MeshInstance3D"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionPulse/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/Area3D"]
 shape = SubResource("SphereShape3D_2r3xh")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_hkfng")
-
-[connection signal="body_entered" from="DetectionPulse/Area3D" to="." method="_on_area_3d_body_entered"]

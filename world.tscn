@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://br27b8bu3um0c"]
+[gd_scene load_steps=21 format=3 uid="uid://br27b8bu3um0c"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_k5e8m"]
 [ext_resource type="Texture2D" uid="uid://baj6tmfb7d0ch" path="res://rosendal_park_sunset_puresky_2k.hdr" id="2_36prk"]
@@ -23,12 +23,18 @@ ambient_light_source = 3
 ambient_light_color = Color(0.658824, 0.560784, 0.34902, 1)
 ambient_light_sky_contribution = 0.26
 tonemap_mode = 2
-tonemap_exposure = 0.31
+tonemap_exposure = 0.26
 tonemap_white = 6.0
+ssil_enabled = true
+glow_enabled = true
+glow_strength = 0.65
+glow_blend_mode = 1
 fog_light_color = Color(0.658824, 0.560784, 0.34902, 1)
+fog_density = 0.0
 volumetric_fog_enabled = true
-volumetric_fog_density = 0.0117
+volumetric_fog_density = 0.0176
 volumetric_fog_albedo = Color(0.840528, 0.571739, 0.300921, 1)
+volumetric_fog_ambient_inject = 1.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tbgc7"]
 cull_mode = 1
@@ -82,9 +88,6 @@ material = SubResource("ShaderMaterial_83es4")
 flip_faces = true
 size = Vector2(2, 2)
 
-[sub_resource type="NavigationMesh" id="NavigationMesh_ojrtp"]
-agent_max_slope = 70.0
-
 [node name="World" type="Node3D"]
 script = ExtResource("1_k5e8m")
 
@@ -120,15 +123,5 @@ extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_3i2dr")
 skeleton = NodePath("../Dunes/MeshInstance3D")
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
-transform = Transform3D(1.00095, 0, 0, 0, 1.00095, 0, 0, 0, 1.00095, 0, 9.29133, 0)
-navigation_mesh = SubResource("NavigationMesh_ojrtp")
-
-[node name="Drone" parent="NavigationRegion3D" instance=ExtResource("9_gk7jr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.88252, 23.3175, -34.1798)
-
-[node name="Drone2" parent="NavigationRegion3D" instance=ExtResource("9_gk7jr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.59899, 20.6878, 67.0814)
-
-[node name="Drone3" parent="NavigationRegion3D" instance=ExtResource("9_gk7jr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.34885, 10.1083, -9.21581)
+[node name="Drone" parent="." instance=ExtResource("9_gk7jr")]
+transform = Transform3D(1.00095, 0, 0, 0, 1.00095, 0, 0, 0, 1.00095, -1.88432, 21.8943, -34.2125)

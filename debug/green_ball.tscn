@@ -12,7 +12,6 @@ albedo_color = Color(0.55895, 0.572782, 0.259479, 1)
 material = SubResource("StandardMaterial3D_h444q")
 
 [node name="GreenBall" type="StaticBody3D" groups=["interacts_with_bullet"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("1_017md")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
