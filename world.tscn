@@ -1,17 +1,17 @@
 [gd_scene load_steps=21 format=3 uid="uid://br27b8bu3um0c"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_k5e8m"]
-[ext_resource type="Texture2D" uid="uid://baj6tmfb7d0ch" path="res://rosendal_park_sunset_puresky_2k.hdr" id="2_36prk"]
 [ext_resource type="Shader" uid="uid://drde4i40b6dal" path="res://dunes/dune_shader.tres" id="2_q8d7v"]
+[ext_resource type="Texture2D" uid="uid://crtvo2qo4vxs" path="res://kiara_1_dawn_2k.hdr" id="2_wcum0"]
 [ext_resource type="Texture2D" uid="uid://dqtfav1cov4wa" path="res://dunes/desert_height.png" id="4_thae6"]
 [ext_resource type="Script" path="res://dunes/dune.gd" id="4_v6xbh"]
 [ext_resource type="PackedScene" uid="uid://5kxn4fv8t148" path="res://character/character.tscn" id="6_fsorv"]
 [ext_resource type="PackedScene" uid="uid://c1gxcks7ajhu" path="res://debug/green_ball.tscn" id="6_oqggs"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="7_sv6bh"]
-[ext_resource type="PackedScene" uid="uid://b32mwduyu4gxl" path="res://drones/shite_drone.tscn" id="9_gk7jr"]
+[ext_resource type="PackedScene" uid="uid://b32mwduyu4gxl" path="res://drones/shite_drone/drone.tscn" id="9_gk7jr"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ihux0"]
-panorama = ExtResource("2_36prk")
+panorama = ExtResource("2_wcum0")
 
 [sub_resource type="Sky" id="Sky_fyna6"]
 sky_material = SubResource("PanoramaSkyMaterial_ihux0")
@@ -25,13 +25,13 @@ ambient_light_sky_contribution = 0.26
 tonemap_mode = 2
 tonemap_exposure = 0.26
 tonemap_white = 6.0
-ssil_enabled = true
+sdfgi_enabled = true
+sdfgi_energy = 0.07
 glow_enabled = true
 glow_strength = 0.65
 glow_blend_mode = 1
 fog_light_color = Color(0.658824, 0.560784, 0.34902, 1)
 fog_density = 0.0
-volumetric_fog_enabled = true
 volumetric_fog_density = 0.0176
 volumetric_fog_albedo = Color(0.840528, 0.571739, 0.300921, 1)
 volumetric_fog_ambient_inject = 1.4
@@ -125,3 +125,5 @@ skeleton = NodePath("../Dunes/MeshInstance3D")
 
 [node name="Drone" parent="." instance=ExtResource("9_gk7jr")]
 transform = Transform3D(1.00095, 0, 0, 0, 1.00095, 0, 0, 0, 1.00095, -1.88432, 21.8943, -34.2125)
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

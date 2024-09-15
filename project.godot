@@ -23,6 +23,7 @@ import/blender/enabled=false
 
 player_hunter=""
 killable=""
+interacts_with_bullet=""
 
 [input]
 
