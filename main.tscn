@@ -1,0 +1,114 @@
+[gd_scene load_steps=7 format=3 uid="uid://c48d16adbo60k"]
+
+[ext_resource type="Script" path="res://main.gd" id="1_38fik"]
+[ext_resource type="PackedScene" uid="uid://br27b8bu3um0c" path="res://world.tscn" id="1_sx3p7"]
+[ext_resource type="FontFile" uid="uid://bhkdp6vxkv6s7" path="res://wrong_delivery/Wrong Delivery.ttf" id="3_jd53b"]
+
+[sub_resource type="Animation" id="Animation_4nxdi"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0p7n6"]
+resource_name = "fade_scene"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e5o1p"]
+_data = {
+"RESET": SubResource("Animation_4nxdi"),
+"fade_scene": SubResource("Animation_0p7n6")
+}
+
+[node name="Main" type="Node" node_paths=PackedStringArray("world")]
+script = ExtResource("1_38fik")
+world = NodePath("World")
+
+[node name="World" parent="." instance=ExtResource("1_sx3p7")]
+
+[node name="GUI" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Death" type="Control" parent="GUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="RichTextLabel" parent="GUI/Death"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -451.0
+offset_right = 451.0
+offset_bottom = 299.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_fonts/normal_font = ExtResource("3_jd53b")
+theme_override_font_sizes/normal_font_size = 286
+text = "DEATH"
+
+[node name="Button" type="Button" parent="GUI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -114.5
+offset_top = -83.0
+offset_right = 114.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_jd53b")
+theme_override_font_sizes/font_size = 71
+text = "AGAIN"
+
+[node name="SceneFade" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_e5o1p")
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[connection signal="button_up" from="GUI/Button" to="." method="_on_button_button_up"]
+
+[editable path="World"]

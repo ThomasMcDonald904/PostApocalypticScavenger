@@ -5,7 +5,7 @@ signal has_been_shot(collision_point, collision_normal)
 @export var hmap:CompressedTexture2D
 @onready var collider: CollisionShape3D = $CollisionShape3D
 var sand_spray_particles_PS: PackedScene = load("res://dunes/shot_sand_particles.tscn")
-
+var bullet_hit_audio: AudioStreamMP3 = preload("res://audio/bullet_hitting_sand.mp3")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -38,3 +38,6 @@ func shot_sand(collision_point: Vector3, collision_normal: Vector3):
 	sand_particles.process_material.direction = collision_normal.normalized() + shot_vector.normalized()
 	sand_particles.restart() 
 	sand_particles.finished.connect(sand_particles.queue_free)
+	
+	$BulletHitSandAudio.global_position = collision_point
+	$BulletHitSandAudio.play()

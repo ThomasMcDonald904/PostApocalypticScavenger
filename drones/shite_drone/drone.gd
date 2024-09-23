@@ -6,19 +6,27 @@ signal has_been_shot(collision_point, collision_normal)
 var player: CharacterBody3D
 
 var drone_ragdoll_PS: PackedScene = preload("res://drones/shite_drone/drone_ragdoll.tscn")
+var zap_ball_PS: PackedScene = preload("res://drones/shite_drone/zap_ball.tscn")
 
 @export var detection_pulse_audio: AudioStreamPlayer3D
 @export var bullet_hit_audio: AudioStreamPlayer3D
 @export var bullet_hit_particles: GPUParticles3D
 @export var smoke_particles: GPUParticles3D
 @export var smoke_sound: AudioStreamPlayer3D
+@export var zap_ball_emitter_position: Marker3D
 
 
 @export var detection_pulse_range = 30 # metres
 @export var detection_pulse_speed = 3 # time it takes to travel d_p_r distance
+@export var speed_multiplier = 5
+@export var minimum_attack_distance = 20
 var delay_before_pulse := 1.49 # sec
 
 var health = 3
+
+var can_emit_zap_balls = true
+var current_nbr_launched_zap_ball = 0
+var max_nbr_launched_zap_balls = 3
 
 var is_hunting = false
 
@@ -58,8 +66,13 @@ func emit_detection_pulse():
 
 func _physics_process(_delta: float) -> void:
 	if is_hunting:
-		velocity = (player.global_position - global_position).normalized() * 5
+		velocity = (player.global_position - global_position).normalized() * speed_multiplier
 		look_at(player.position)
+		if position.distance_to(player.position) <= minimum_attack_distance and current_nbr_launched_zap_ball < max_nbr_launched_zap_balls and can_emit_zap_balls:
+			can_emit_zap_balls = false
+			$ZapBallEmissionCooldown.start()
+			launch_zap_ball()
+			max_nbr_launched_zap_balls += 1
 		move_and_slide()
 
 func start_hunting():
@@ -87,9 +100,21 @@ func deal_damage(collision_point, _collision_normal):
 
 func drone_terminated():
 	visible = false
+	$CollisionShape3D.disabled = true
 	var drone_ragdoll_instance:RigidBody3D = drone_ragdoll_PS.instantiate()
+	get_parent().add_child(drone_ragdoll_instance)
 	drone_ragdoll_instance.global_position = global_position
 	drone_ragdoll_instance.rotation = rotation
-	get_parent().add_child(drone_ragdoll_instance)
 	drone_ragdoll_instance.apply_impulse((player.global_position - global_position).normalized() * 8)
+	await bullet_hit_audio.finished
 	queue_free()
+
+func launch_zap_ball():
+	var zap_ball_instance: RigidBody3D = zap_ball_PS.instantiate()
+	get_parent().add_child(zap_ball_instance)
+	zap_ball_instance.global_position = zap_ball_emitter_position.global_position
+	zap_ball_instance.apply_impulse((zap_ball_emitter_position.global_position - global_position)*7)
+
+
+func _on_zap_ball_emission_cooldown_timeout() -> void:
+	can_emit_zap_balls = true

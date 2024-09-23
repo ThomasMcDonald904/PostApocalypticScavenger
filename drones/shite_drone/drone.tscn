@@ -4,7 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://d14u7g6pqbv3l" path="res://audio/drone_detection_pulse.mp3" id="3_hkfng"]
 [ext_resource type="AudioStream" uid="uid://cv1d8njqbj7r7" path="res://audio/drone_bullet_hit.mp3" id="4_iggsj"]
 [ext_resource type="AudioStream" uid="uid://bhpxm82r6kmfs" path="res://audio/burning-fire-steam-87118.mp3" id="5_6h4d2"]
-[ext_resource type="Texture2D" uid="uid://b5jc0m6yvsmp0" path="res://drones/pngkey.com-fog-png-178727.png" id="5_d6rjv"]
+[ext_resource type="Texture2D" uid="uid://bmpol3kh5q3hw" path="res://kenney_particle-pack/PNG (Transparent)/smoke_08.png" id="5_wxgat"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_qtf6m"]
 load_path = "res://.godot/imported/drone_texture.png-d5e6472197b09f5be6c5589eea13d303.ctex"
@@ -93,23 +93,29 @@ gravity = Vector3(0, 1, 0)
 tangential_accel_min = -2.23517e-06
 tangential_accel_max = 1.22
 
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_ho8ai"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5fqvr"]
 transparency = 1
-albedo_color = Color(1, 1, 1, 0.156863)
-albedo_texture = ExtResource("5_d6rjv")
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.164706)
+albedo_texture = ExtResource("5_wxgat")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
 
-[sub_resource type="SphereMesh" id="SphereMesh_2yduq"]
-material = SubResource("ORMMaterial3D_ho8ai")
-radial_segments = 4
-rings = 1
+[sub_resource type="QuadMesh" id="QuadMesh_76rbx"]
+material = SubResource("StandardMaterial3D_5fqvr")
+size = Vector2(2, 2)
 
-[node name="Drone" type="CharacterBody3D" node_paths=PackedStringArray("detection_pulse_audio", "bullet_hit_audio", "bullet_hit_particles", "smoke_particles", "smoke_sound") groups=["interacts_with_bullet", "player_hunter"]]
+[node name="Drone" type="CharacterBody3D" node_paths=PackedStringArray("detection_pulse_audio", "bullet_hit_audio", "bullet_hit_particles", "smoke_particles", "smoke_sound", "zap_ball_emitter_position") groups=["interacts_with_bullet", "player_hunter"]]
+collision_mask = 2
 script = ExtResource("1_wfcxh")
 detection_pulse_audio = NodePath("DetectionPulseAudio")
 bullet_hit_audio = NodePath("BulletHitAudio")
 bullet_hit_particles = NodePath("BulletHitParticles")
 smoke_particles = NodePath("SmokeParticles")
 smoke_sound = NodePath("SmokeAudio")
+zap_ball_emitter_position = NodePath("ZapBallEmitterPosition")
 
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
@@ -158,8 +164,16 @@ emitting = false
 amount = 55
 sub_emitter = NodePath(".")
 lifetime = 2.89
-explosiveness = 0.05
+local_coords = true
 process_material = SubResource("ParticleProcessMaterial_lf6n5")
-draw_pass_1 = SubResource("SphereMesh_2yduq")
+draw_pass_1 = SubResource("QuadMesh_76rbx")
+
+[node name="ZapBallEmitterPosition" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08768, -1.07126)
+
+[node name="ZapBallEmissionCooldown" type="Timer" parent="."]
+wait_time = 6.0
+one_shot = true
 
 [connection signal="body_entered" from="DetectionPulse/Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="timeout" from="ZapBallEmissionCooldown" to="." method="_on_zap_ball_emission_cooldown_timeout"]

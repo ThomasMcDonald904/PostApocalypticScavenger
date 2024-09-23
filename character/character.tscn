@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://5kxn4fv8t148"]
+[gd_scene load_steps=10 format=3 uid="uid://5kxn4fv8t148"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_d87vr"]
 [ext_resource type="Texture2D" uid="uid://n5jhvxsmitad" path="res://rifle/crosshair-not-aiming.png" id="2_4rbhx"]
 [ext_resource type="Texture2D" uid="uid://buk1mb2082jpx" path="res://rifle/crosshair-aiming.png" id="2_gnhyu"]
 [ext_resource type="PackedScene" uid="uid://dtlguoiv5dk0o" path="res://rifle/rifle.tscn" id="3_ufkhg"]
 [ext_resource type="Script" path="res://camera.gd" id="4_lwalm"]
+[ext_resource type="Texture2D" uid="uid://begi2feref5bh" path="res://character/blurry_blood_overlay.png" id="5_0gjpx"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j5l0w"]
 diffuse_mode = 3
@@ -33,6 +34,9 @@ mesh = SubResource("CapsuleMesh_mah2n")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("ConvexPolygonShape3D_0uclb")
 
+[node name="DeathCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5.78645, 0)
+
 [node name="CameraOrigin" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65201, 0)
 
@@ -45,6 +49,26 @@ script = ExtResource("4_lwalm")
 target_position = Vector3(0, 0, -100)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="BloodyScreen" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/BloodyScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_0gjpx")
+expand_mode = 2
 
 [node name="Control" type="Control" parent="CanvasLayer"]
 layout_mode = 3

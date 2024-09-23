@@ -1,13 +1,12 @@
-[gd_scene load_steps=21 format=3 uid="uid://br27b8bu3um0c"]
+[gd_scene load_steps=14 format=3 uid="uid://br27b8bu3um0c"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_k5e8m"]
-[ext_resource type="Shader" uid="uid://drde4i40b6dal" path="res://dunes/dune_shader.tres" id="2_q8d7v"]
 [ext_resource type="Texture2D" uid="uid://crtvo2qo4vxs" path="res://kiara_1_dawn_2k.hdr" id="2_wcum0"]
-[ext_resource type="Texture2D" uid="uid://dqtfav1cov4wa" path="res://dunes/desert_height.png" id="4_thae6"]
-[ext_resource type="Script" path="res://dunes/dune.gd" id="4_v6xbh"]
+[ext_resource type="PackedScene" uid="uid://c8cmt46g65y1l" path="res://dunes/dunes.tscn" id="3_rtlty"]
 [ext_resource type="PackedScene" uid="uid://5kxn4fv8t148" path="res://character/character.tscn" id="6_fsorv"]
 [ext_resource type="PackedScene" uid="uid://c1gxcks7ajhu" path="res://debug/green_ball.tscn" id="6_oqggs"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="7_sv6bh"]
+[ext_resource type="AudioStream" uid="uid://ckfywxdtdtd0p" path="res://audio/badlands-wind-slow-open-barren-landscape-near-stream-alberta-100315-18027.mp3" id="8_yspyl"]
 [ext_resource type="PackedScene" uid="uid://b32mwduyu4gxl" path="res://drones/shite_drone/drone.tscn" id="9_gk7jr"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ihux0"]
@@ -25,7 +24,6 @@ ambient_light_sky_contribution = 0.26
 tonemap_mode = 2
 tonemap_exposure = 0.26
 tonemap_white = 6.0
-sdfgi_enabled = true
 sdfgi_energy = 0.07
 glow_enabled = true
 glow_strength = 0.65
@@ -35,38 +33,6 @@ fog_density = 0.0
 volumetric_fog_density = 0.0176
 volumetric_fog_albedo = Color(0.840528, 0.571739, 0.300921, 1)
 volumetric_fog_ambient_inject = 1.4
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tbgc7"]
-cull_mode = 1
-shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.02
-
-[sub_resource type="Gradient" id="Gradient_fg7qa"]
-colors = PackedColorArray(0.588235, 0.498039, 0.305882, 1, 0.419608, 0.352941, 0.219608, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_a7t36"]
-frequency = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kqiap"]
-color_ramp = SubResource("Gradient_fg7qa")
-noise = SubResource("FastNoiseLite_a7t36")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bvox1"]
-render_priority = 0
-next_pass = SubResource("StandardMaterial3D_tbgc7")
-shader = ExtResource("2_q8d7v")
-shader_parameter/height = 20
-shader_parameter/FloatParameter = 3.0
-shader_parameter/Texture2DParameter = SubResource("NoiseTexture2D_kqiap")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_y0412"]
-lightmap_size_hint = Vector2i(752, 752)
-material = SubResource("ShaderMaterial_bvox1")
-size = Vector2(150, 150)
-subdivide_width = 32
-subdivide_depth = 32
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_83es4"]
 render_priority = 0
@@ -94,16 +60,7 @@ script = ExtResource("1_k5e8m")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_u8rv5")
 
-[node name="Dunes" type="StaticBody3D" parent="." groups=["interacts_with_bullet"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.2592, 1.38622, 1.42851)
-script = ExtResource("4_v6xbh")
-hmap = ExtResource("4_thae6")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Dunes"]
-mesh = SubResource("PlaneMesh_y0412")
-skeleton = NodePath("")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Dunes"]
+[node name="Dunes" parent="." instance=ExtResource("3_rtlty")]
 
 [node name="GreenBall" parent="." instance=ExtResource("6_oqggs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.31561, 14.8488, 31.925)
@@ -125,5 +82,10 @@ skeleton = NodePath("../Dunes/MeshInstance3D")
 
 [node name="Drone" parent="." instance=ExtResource("9_gk7jr")]
 transform = Transform3D(1.00095, 0, 0, 0, 1.00095, 0, 0, 0, 1.00095, -1.88432, 21.8943, -34.2125)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_yspyl")
+volume_db = -20.0
+autoplay = true
 
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]

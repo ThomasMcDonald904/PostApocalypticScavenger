@@ -11,6 +11,9 @@ var max_slope_angle := 70
 var is_aiming = false
 var has_gun_equiped = false
 
+var health = 10
+@export var very_hurt_threshold = 5
+
 @export var gun_fire_shake_amount = 0.5 # Between 0 and 1
 
 @export var rifle: Node3D
@@ -29,6 +32,13 @@ var has_gun_equiped = false
 
 @onready var camera_origin := $CameraOrigin
 
+signal death
+
+signal damage_given
+
+func _ready() -> void:
+	$MeshInstance3D.mesh.material.albedo_color = Color("868338")
+	damage_given.connect(receive_damage)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -39,10 +49,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event is InputEventMouseMotion:
 			rotate_y(-event.relative.x * 0.01)
 			camera_origin.rotate_x(-event.relative.y * 0.01)
-			#camera_origin.rotation.x = clamp(camera_origin.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+			camera_origin.rotation.x = clamp(camera_origin.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 
 func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("aim") and not Input.is_action_pressed("sprint") or Input.is_action_just_pressed("shoot") and not Input.is_action_pressed("sprint"):
+	if Input.is_action_just_pressed("aim") and not Input.is_action_pressed("sprint") or Input.is_action_just_pressed("shoot") and not Input.is_action_pressed("sprint") and not health <= 0:
 		var tween1 = get_tree().create_tween()
 		var tween2 = get_tree().create_tween()
 		has_gun_equiped = true
@@ -63,8 +73,6 @@ func _process(_delta: float) -> void:
 		tween2.tween_property($Rifle, "rotation", rifle_carried_rotation, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 		tween3.tween_property($CameraOrigin/Camera3D, "position", camera_normal_position, 0.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 		$CanvasLayer/Control/Crosshair.texture = normal_crosshair
-
-
 
 func _physics_process(delta: float) -> void:
 	if has_gun_equiped and Input.is_action_just_pressed("shoot"):
@@ -95,10 +103,17 @@ func _physics_process(delta: float) -> void:
 	set_floor_max_angle(deg_to_rad(max_slope_angle))
 	move_and_slide()
 
-
 func shoot():
 	rifle.gun_fired.emit()
 	camera.add_shake(gun_fire_shake_amount)
 	var target:Object = $CameraOrigin/Camera3D/RayCast3D.get_collider()
 	if target != null and target.is_in_group("interacts_with_bullet"):
 		target.emit_signal("has_been_shot", $CameraOrigin/Camera3D/RayCast3D.get_collision_point(), $CameraOrigin/Camera3D/RayCast3D.get_collision_normal())
+
+func receive_damage(amount: float):
+	health -= amount
+	if health <= 0:
+		$CanvasLayer.set_visible(false)
+		death.emit()
+	elif health <= very_hurt_threshold:
+		$CanvasLayer/BloodyScreen.set_visible(true)
