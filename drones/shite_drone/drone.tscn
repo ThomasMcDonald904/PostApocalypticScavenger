@@ -116,6 +116,10 @@ bullet_hit_particles = NodePath("BulletHitParticles")
 smoke_particles = NodePath("SmokeParticles")
 smoke_sound = NodePath("SmokeAudio")
 zap_ball_emitter_position = NodePath("ZapBallEmitterPosition")
+drone_wander_interval_time = 9
+drone_wander_angle_time = 5
+drone_wander_distance = 15
+drone_wander_distance_time = 6
 
 [node name="Cube" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)

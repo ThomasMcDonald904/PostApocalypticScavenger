@@ -2,7 +2,6 @@ extends StaticBody3D
 
 signal has_been_shot(collision_point, collision_normal)
 
-@export var hmap:CompressedTexture2D
 @onready var collider: CollisionShape3D = $CollisionShape3D
 var sand_spray_particles_PS: PackedScene = load("res://dunes/shot_sand_particles.tscn")
 var bullet_hit_audio: AudioStreamMP3 = preload("res://audio/bullet_hitting_sand.mp3")
@@ -11,10 +10,9 @@ var bullet_hit_audio: AudioStreamMP3 = preload("res://audio/bullet_hitting_sand.
 func _ready() -> void:
 	has_been_shot.connect(shot_sand)
 	var float_array: PackedFloat32Array
-	var hmap_image: Image = hmap.get_image()
-	if hmap_image.is_compressed():
-		hmap_image.decompress()
-	hmap_image.resize($MeshInstance3D.mesh.size.x, $MeshInstance3D.mesh.size.y)
+	var hmap_noise: NoiseTexture2D = $MeshInstance3D.get_active_material(0).get("shader_parameter/cell_noise")
+
+	var hmap_image = hmap_noise.noise.get_seamless_image($MeshInstance3D.mesh.size.x, $MeshInstance3D.mesh.size.y)
 	var terrain_height = $MeshInstance3D.get_active_material(0).get("shader_parameter/height")
 	
 	var shape = HeightMapShape3D.new()

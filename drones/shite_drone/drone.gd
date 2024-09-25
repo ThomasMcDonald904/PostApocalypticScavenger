@@ -29,8 +29,14 @@ var current_nbr_launched_zap_ball = 0
 var max_nbr_launched_zap_balls = 3
 
 var is_hunting = false
-
 var is_downed = false
+var finished_wander_sequence = true
+
+@export_category("Wander Parameters")
+@export var drone_wander_interval_time := 10
+@export var drone_wander_angle_time := 3
+@export var drone_wander_distance := 10
+@export var drone_wander_distance_time := 10
 
 func _ready() -> void:
 	has_been_shot.connect(deal_damage)
@@ -74,6 +80,8 @@ func _physics_process(_delta: float) -> void:
 			launch_zap_ball()
 			max_nbr_launched_zap_balls += 1
 		move_and_slide()
+	elif finished_wander_sequence:
+		wander()
 
 func start_hunting():
 	var tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_EXPO)
@@ -118,3 +126,23 @@ func launch_zap_ball():
 
 func _on_zap_ball_emission_cooldown_timeout() -> void:
 	can_emit_zap_balls = true
+
+func wander() -> void:
+	# Pick random direction 
+	var random_angle = randi_range(0, 2*PI)
+	var random_pos := Vector3(cos(random_angle), 0, sin(random_angle))
+	print(rad_to_deg(position.angle_to(random_pos)), position + random_pos*drone_wander_distance)
+	var tween = get_tree().create_tween().set_ease(Tween.EASE_IN_OUT)
+	var before_rot = rotation
+	look_at(position+random_pos)
+	var after_rot = rotation
+	rotation = before_rot
+	tween.tween_property(self, "rotation", after_rot, drone_wander_angle_time)
+	
+	tween.tween_interval(randi_range(drone_wander_interval_time * 0.5, drone_wander_interval_time))
+	
+	# Go to random position
+	tween.tween_property(self, "global_position", global_position + random_pos * drone_wander_distance, drone_wander_distance_time).from_current()
+
+	tween.tween_callback(func(): finished_wander_sequence = true)
+	finished_wander_sequence = false

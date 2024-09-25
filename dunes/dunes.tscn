@@ -1,51 +1,30 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8cmt46g65y1l"]
+[gd_scene load_steps=7 format=3 uid="uid://c8cmt46g65y1l"]
 
 [ext_resource type="Script" path="res://dunes/dune.gd" id="1_640s8"]
-[ext_resource type="Texture2D" uid="uid://dqtfav1cov4wa" path="res://dunes/desert_height.png" id="2_uh8lm"]
 [ext_resource type="Shader" uid="uid://drde4i40b6dal" path="res://dunes/dune_shader.tres" id="3_r17pa"]
 [ext_resource type="AudioStream" uid="uid://u735m0wyp5fu" path="res://audio/bullet_hitting_sand.mp3" id="4_toodf"]
+[ext_resource type="Texture2D" uid="uid://bnnssmjpfd7tq" path="res://dunes/new_noise_texture_2d.tres" id="4_v2om7"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tbgc7"]
-cull_mode = 1
-shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.02
-
-[sub_resource type="Gradient" id="Gradient_fg7qa"]
-colors = PackedColorArray(0.588235, 0.498039, 0.305882, 1, 0.419608, 0.352941, 0.219608, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_a7t36"]
-frequency = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kqiap"]
-color_ramp = SubResource("Gradient_fg7qa")
-noise = SubResource("FastNoiseLite_a7t36")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bvox1"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2dsfl"]
 render_priority = 0
-next_pass = SubResource("StandardMaterial3D_tbgc7")
 shader = ExtResource("3_r17pa")
-shader_parameter/height = 20
-shader_parameter/FloatParameter = 3.0
-shader_parameter/Texture2DParameter = SubResource("NoiseTexture2D_kqiap")
+shader_parameter/height = 100
+shader_parameter/Roughness = 10.0
+shader_parameter/cell_noise = ExtResource("4_v2om7")
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_y0412"]
-lightmap_size_hint = Vector2i(752, 752)
-material = SubResource("ShaderMaterial_bvox1")
-size = Vector2(150, 150)
-subdivide_width = 32
-subdivide_depth = 32
+[sub_resource type="PlaneMesh" id="PlaneMesh_oikxv"]
+material = SubResource("ShaderMaterial_2dsfl")
+size = Vector2(1000, 1000)
+subdivide_width = 600
+subdivide_depth = 600
 
 [node name="Dunes" type="StaticBody3D" groups=["interacts_with_bullet"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.2592, 1.38622, 1.42851)
 collision_layer = 5
 collision_mask = 5
 script = ExtResource("1_640s8")
-hmap = ExtResource("2_uh8lm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("PlaneMesh_y0412")
+mesh = SubResource("PlaneMesh_oikxv")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
